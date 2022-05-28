@@ -58,18 +58,18 @@ namespace WashMyCar.Core.Tests.Services
         }
 
         [Test]
-        public void GetAll_GivenNoColorExist_ShouldReturnEmptyList()
+        public void GetAllColors_GivenNoColorExist_ShouldReturnEmptyList()
         {
             //---------------Set up test pack-------------------            
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
             IEnumerable<ColorResponse> results = _service.GetAllColors();
             //---------------Test Result -----------------------
-            Assert.IsEmpty(results);            
+            Assert.IsEmpty(results);
         }
 
         [Test]
-        public void GetAll_GivenAColorsExist_ShouldReturnThatColor() 
+        public void GetAllColors_GivenAColorsExist_ShouldReturnThatColor()
         {
             //---------------Set up test pack-------------------
             _availableColors = GetAvailableColors(1);
@@ -83,7 +83,7 @@ namespace WashMyCar.Core.Tests.Services
         }
 
         [Test]
-        public void GetAll_GivenTwoColorsExist_ShouldReturnThoseColors()
+        public void GetAllColors_GivenTwoColorsExist_ShouldReturnThoseColors()
         {
             //---------------Set up test pack-------------------
             _availableColors = GetAvailableColors(2);
@@ -97,7 +97,7 @@ namespace WashMyCar.Core.Tests.Services
         }
 
         [Test]
-        public void GetAll_GivenManyColorsExist_ShouldReturnThoseColors()
+        public void GetAllColors_GivenManyColorsExist_ShouldReturnThoseColors()
         {
             //---------------Set up test pack-------------------
             _availableColors = GetAvailableColors(4);
@@ -110,9 +110,32 @@ namespace WashMyCar.Core.Tests.Services
             Assert.AreEqual("color 4", results.LastOrDefault().Description);
         }
 
+        [Test]
+        public void GetAllColors_ShouldCallGetAll()
+        {
+            //---------------Set up test pack-------------------
+            //---------------Assert Precondition----------------
+            //---------------Execute Test ----------------------
+            IEnumerable<ColorResponse> results = _service.GetAllColors();
+            //---------------Test Result -----------------------            
+            _colorRepositoryMock.Verify(x => x.GetAll(), Times.Once);
+        }
+
+        [Test]
+        public void Save_GivenRequestIsNull_ShouldThrowException()
+        {
+            //---------------Set up test pack-------------------
+            //---------------Assert Precondition----------------
+            //---------------Execute Test ----------------------
+            var ex = Assert.Throws<ArgumentNullException>(() =>
+            _service.Save(null));
+            //---------------Test Result -----------------------
+            Assert.AreEqual("colorRequest", ex.ParamName);
+        }
+
         private List<ColorResponse> GetAvailableColors(int numberOfColors)
         {
-            for(int color = 1; color <= numberOfColors; color++)
+            for (int color = 1; color <= numberOfColors; color++)
                 _availableColors.Add(new ColorResponse { Description = "color " + color });
             return _availableColors;
         }
