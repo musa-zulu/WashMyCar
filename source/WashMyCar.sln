@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WashMyCar.Core.Tests", "WashMyCar.Core.Tests\WashMyCar.Core.Tests.csproj", "{F9304ABC-91C4-4E52-93C1-BE5441033EFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WashMyCar.Core.Tests", "WashMyCar.Core.Tests\WashMyCar.Core.Tests.csproj", "{F9304ABC-91C4-4E52-93C1-BE5441033EFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WashMyCar.Core", "WashMyCar.Core\WashMyCar.Core.csproj", "{871967DC-6231-49EA-B4B0-303E7B908B55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WashMyCar.Core", "WashMyCar.Core\WashMyCar.Core.csproj", "{871967DC-6231-49EA-B4B0-303E7B908B55}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WashMyCar.Infrastructure", "WashMyCar.Infrastructure\WashMyCar.Infrastructure.csproj", "{1DF7912E-F847-4564-8D43-2B2E035796C0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WashMyCar.Web", "WashMyCar.Web\WashMyCar.Web.csproj", "{91E6A006-DFEA-46E4-A7DD-1C1A7A573A08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{871967DC-6231-49EA-B4B0-303E7B908B55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{871967DC-6231-49EA-B4B0-303E7B908B55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{871967DC-6231-49EA-B4B0-303E7B908B55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DF7912E-F847-4564-8D43-2B2E035796C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DF7912E-F847-4564-8D43-2B2E035796C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DF7912E-F847-4564-8D43-2B2E035796C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DF7912E-F847-4564-8D43-2B2E035796C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91E6A006-DFEA-46E4-A7DD-1C1A7A573A08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91E6A006-DFEA-46E4-A7DD-1C1A7A573A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91E6A006-DFEA-46E4-A7DD-1C1A7A573A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91E6A006-DFEA-46E4-A7DD-1C1A7A573A08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,9 +1,10 @@
-﻿using WashMyCar.Core.Response;
+﻿using WashMyCar.Core.Domain;
 
 namespace WashMyCar.Core.DataContracts
 {
     public interface IColorRepository
     {        
-        public IEnumerable<ColorResponse> GetAll();
+        List<Color> GetAll();
+        void Save(Color color);
     }
 }
