@@ -171,6 +171,42 @@ namespace WashMyCar.Core.Tests.Services
             _colorRepositoryMock.Received(1).Save(Arg.Any<Color>());
         }
 
+        [Test]
+        public void Save_GivenValidRequestAndObjectIsSaved_ShouldReturnTrue()
+        {
+            //---------------Set up test pack-------------------
+            var color = new Color
+            {
+                Description = "white",
+            };
+            _mapper?.Map<Color>(Arg.Any<ColorRequest>())
+                .Returns(color);
+            _colorRepositoryMock?.Save(Arg.Any<Color>()).Returns(true);
+            //---------------Assert Precondition----------------
+            //---------------Execute Test ----------------------
+            var results = _service?.Save(_request);
+            //---------------Test Result -----------------------            
+            Assert.IsTrue(results);
+        }
+
+        [Test]
+        public void Save_GivenValidRequestAndObjectIsNotSaved_ShouldReturnFalse()
+        {
+            //---------------Set up test pack-------------------
+            var color = new Color
+            {
+                Description = "white",
+            };
+            _mapper?.Map<Color>(Arg.Any<ColorRequest>())
+                .Returns(color);
+            _colorRepositoryMock?.Save(null).Returns(false);
+            //---------------Assert Precondition----------------
+            //---------------Execute Test ----------------------
+            var results = _service?.Save(_request);
+            //---------------Test Result -----------------------            
+            Assert.IsFalse(results);
+        }
+
         private void ResolveMapper(List<ColorResponse> list)
         {
             _mapper?.Map<List<ColorResponse>>(Arg.Any<List<Color>>()).Returns(list);

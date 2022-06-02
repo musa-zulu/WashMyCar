@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Repository\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\WashMyCar.Core\WashMyCar.Core.csproj" />
     <ProjectReference Include="..\WashMyCar.Infrastructure\WashMyCar.Infrastructure.csproj" />
   </ItemGroup>

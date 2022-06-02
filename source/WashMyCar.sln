@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WashMyCar.Infrastructure", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WashMyCar.Web", "WashMyCar.Web\WashMyCar.Web.csproj", "{91E6A006-DFEA-46E4-A7DD-1C1A7A573A08}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WashMyCar.DataAccess", "WashMyCar.DataAccess\WashMyCar.DataAccess.csproj", "{BE71DBA2-D38F-4A9D-8EF0-3555C3E6A100}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WashMyCar.DataAccess.Tests", "WashMyCar.DataAccess.Tests\WashMyCar.DataAccess.Tests.csproj", "{24ADC3D5-372C-404D-BC4E-8C906BC5B9D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{91E6A006-DFEA-46E4-A7DD-1C1A7A573A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91E6A006-DFEA-46E4-A7DD-1C1A7A573A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91E6A006-DFEA-46E4-A7DD-1C1A7A573A08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE71DBA2-D38F-4A9D-8EF0-3555C3E6A100}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE71DBA2-D38F-4A9D-8EF0-3555C3E6A100}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE71DBA2-D38F-4A9D-8EF0-3555C3E6A100}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE71DBA2-D38F-4A9D-8EF0-3555C3E6A100}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24ADC3D5-372C-404D-BC4E-8C906BC5B9D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24ADC3D5-372C-404D-BC4E-8C906BC5B9D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24ADC3D5-372C-404D-BC4E-8C906BC5B9D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24ADC3D5-372C-404D-BC4E-8C906BC5B9D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
