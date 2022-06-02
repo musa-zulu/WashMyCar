@@ -15,11 +15,11 @@ namespace WashMyCar.Core.Tests.Services
     [TestFixture]
     public class ColorServiceTests
     {
-        private ColorRequest _request;
-        private ColorService _service;
-        private List<Color> _availableColors;
-        private IColorRepository _colorRepositoryMock;
-        private IMapper _mapper;
+        private ColorRequest? _request;
+        private ColorService? _service;
+        private List<Color>? _availableColors;
+        private IColorRepository? _colorRepositoryMock;
+        private IMapper? _mapper;
 
         [SetUp]
         public void Setup()
@@ -59,6 +59,17 @@ namespace WashMyCar.Core.Tests.Services
             var ex = Assert.Throws<ArgumentNullException>(() => new ColorService(null, _mapper));
             //---------------Test Result -----------------------
             Assert.AreEqual("colorRepository", ex.ParamName);
+        }
+
+        [Test]
+        public void Construct_GivenThatMappingEngineIsNull_ShouldThrowException()
+        {
+            //---------------Set up test pack-------------------
+            //---------------Assert Precondition----------------
+            //---------------Execute Test ----------------------
+            var ex = Assert.Throws<ArgumentNullException>(() => new ColorService(_colorRepositoryMock, null));
+            //---------------Test Result -----------------------
+            Assert.AreEqual("mapper", ex.ParamName);
         }
 
         [Test]
@@ -162,23 +173,22 @@ namespace WashMyCar.Core.Tests.Services
 
         private void ResolveMapper(List<ColorResponse> list)
         {
-            _mapper.Map<List<ColorResponse>>(Arg.Any<List<Color>>()).Returns(list);
+            _mapper?.Map<List<ColorResponse>>(Arg.Any<List<Color>>()).Returns(list);
         }
 
-        private List<Color> GetAvailableColors(int numberOfColors)
+        private List<Color>? GetAvailableColors(int numberOfColors)
         {
             for (int color = 1; color <= numberOfColors; color++)
-                _availableColors.Add(new Color { Description = "color " + color });
+                _availableColors?.Add(new Color { Description = "color " + color });
             return _availableColors;
         }
 
-        private List<ColorResponse> GetList(int records)
+        private static List<ColorResponse> GetList(int records)
         {
             var response = new List<ColorResponse>();
             for (int color = 1; color <= records; color++)
                 response.Add(new ColorResponse { Description = "color " + color });
             return response;            
         }
-
     }
 }
