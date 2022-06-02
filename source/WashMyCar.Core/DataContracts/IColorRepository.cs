@@ -6,5 +6,6 @@ namespace WashMyCar.Core.DataContracts
     {        
         List<Color> GetAll();
         bool Save(Color color);
+        bool Update(Color color);
     }
 }

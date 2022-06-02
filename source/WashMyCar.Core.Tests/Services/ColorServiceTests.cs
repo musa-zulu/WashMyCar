@@ -78,7 +78,7 @@ namespace WashMyCar.Core.Tests.Services
             //---------------Set up test pack-------------------            
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            IEnumerable<ColorResponse> results = _service.GetAllColors();
+            var results = _service?.GetAllColors();
             //---------------Test Result -----------------------
             Assert.IsEmpty(results);
         }
@@ -92,11 +92,11 @@ namespace WashMyCar.Core.Tests.Services
             ResolveMapper(list);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            var results = _service.GetAllColors();
+            var results = _service?.GetAllColors();
             //---------------Test Result -----------------------
             Assert.NotNull(results);
-            Assert.AreEqual(1, results.Count());
-            Assert.AreEqual("color 1", results.FirstOrDefault().Description);
+            Assert.AreEqual(1, results?.Count());
+            Assert.AreEqual("color 1", results?.FirstOrDefault()?.Description);
         }
         
         [Test]
@@ -108,11 +108,11 @@ namespace WashMyCar.Core.Tests.Services
             ResolveMapper(list);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            var results = _service.GetAllColors();
+            var results = _service?.GetAllColors();
             //---------------Test Result -----------------------
             Assert.NotNull(results);
-            Assert.AreEqual(2, results.Count());
-            Assert.AreEqual("color 1", results.FirstOrDefault().Description);
+            Assert.AreEqual(2, results?.Count());
+            Assert.AreEqual("color 1", results?.FirstOrDefault()?.Description);
         }
         
         [Test]
@@ -124,11 +124,11 @@ namespace WashMyCar.Core.Tests.Services
             ResolveMapper(list);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            var results = _service.GetAllColors();
+            var results = _service?.GetAllColors();
             //---------------Test Result -----------------------
             Assert.NotNull(results);
-            Assert.AreEqual(4, results.Count());
-            Assert.AreEqual("color 4", results.LastOrDefault().Description);
+            Assert.AreEqual(4, results?.Count());
+            Assert.AreEqual("color 4", results?.LastOrDefault()?.Description);
         }
 
         [Test]
@@ -137,9 +137,23 @@ namespace WashMyCar.Core.Tests.Services
             //---------------Set up test pack------------------- 
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            _ = _service.GetAllColors();
+            _ = _service?.GetAllColors();
             //---------------Test Result -----------------------            
-            _colorRepositoryMock.Received(1).GetAll();
+            _colorRepositoryMock?.Received(1).GetAll();
+        }
+
+        [Test]
+        public void GetAllColors_ShouldReturnListOfTypeColorResponse()
+        {
+            //---------------Set up test pack-------------------
+            _availableColors = GetAvailableColors(1);
+            List<ColorResponse> list = GetList(1);
+            ResolveMapper(list);
+            //---------------Assert Precondition----------------
+            //---------------Execute Test ----------------------
+            _ = _service?.GetAllColors();
+            //---------------Test Result -----------------------
+            Assert.IsInstanceOf<List<ColorResponse>>(list);
         }
 
         [Test]
@@ -149,7 +163,7 @@ namespace WashMyCar.Core.Tests.Services
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------            
             var ex = Assert.Throws<ArgumentNullException>(() =>
-            _service.Save(null));
+            _service?.Save(null));
             //---------------Test Result -----------------------
             Assert.AreEqual("colorRequest", ex.ParamName);
         }
@@ -158,27 +172,35 @@ namespace WashMyCar.Core.Tests.Services
         public void Save_GivenValidRequest_ShouldCallSaveFromRepo()
         {
             //---------------Set up test pack-------------------
-            var color = new Color
-            {
-                Description = "white",
-            };
-            _mapper.Map<Color>(Arg.Any<ColorRequest>())
+            Color color = CreateColor();
+            _mapper?.Map<Color>(Arg.Any<ColorRequest>())
                 .Returns(color);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            _service.Save(_request);
+            _service?.Save(_request);
             //---------------Test Result -----------------------            
-            _colorRepositoryMock.Received(1).Save(Arg.Any<Color>());
+            _colorRepositoryMock?.Received(1).Save(Arg.Any<Color>());
+        }
+
+        [Test]
+        public void Save_GivenValidRequest_ShouldCallMappingEngine()
+        {
+            //---------------Set up test pack-------------------
+            Color color = CreateColor();
+            _mapper?.Map<Color>(Arg.Any<ColorRequest>())
+                .Returns(color);
+            //---------------Assert Precondition----------------
+            //---------------Execute Test ----------------------
+            _service?.Save(_request);
+            //---------------Test Result -----------------------            
+            _mapper?.Received(1).Map<Color>(Arg.Any<ColorRequest>());
         }
 
         [Test]
         public void Save_GivenValidRequestAndObjectIsSaved_ShouldReturnTrue()
         {
             //---------------Set up test pack-------------------
-            var color = new Color
-            {
-                Description = "white",
-            };
+            Color color = CreateColor();
             _mapper?.Map<Color>(Arg.Any<ColorRequest>())
                 .Returns(color);
             _colorRepositoryMock?.Save(Arg.Any<Color>()).Returns(true);
@@ -193,10 +215,7 @@ namespace WashMyCar.Core.Tests.Services
         public void Save_GivenValidRequestAndObjectIsNotSaved_ShouldReturnFalse()
         {
             //---------------Set up test pack-------------------
-            var color = new Color
-            {
-                Description = "white",
-            };
+            Color color = CreateColor();
             _mapper?.Map<Color>(Arg.Any<ColorRequest>())
                 .Returns(color);
             _colorRepositoryMock?.Save(null).Returns(false);
@@ -205,6 +224,81 @@ namespace WashMyCar.Core.Tests.Services
             var results = _service?.Save(_request);
             //---------------Test Result -----------------------            
             Assert.IsFalse(results);
+        }
+
+        [Test]
+        public void Update_GivenRequestIsNull_ShouldThrowException()
+        {
+            //---------------Set up test pack-------------------
+            //---------------Assert Precondition----------------
+            //---------------Execute Test ----------------------            
+            var ex = Assert.Throws<ArgumentNullException>(() =>
+            _service?.Update(null));
+            //---------------Test Result -----------------------
+            Assert.AreEqual("colorRequest", ex.ParamName);
+        }
+
+        [Test]
+        public void Update_GivenValidRequest_ShouldCallMappingEngine()
+        {
+            //---------------Set up test pack-------------------            
+            //---------------Assert Precondition----------------
+            //---------------Execute Test ----------------------
+            _service?.Update(_request);
+            //---------------Test Result -----------------------            
+            _mapper?.Received(1).Map<Color>(Arg.Any<ColorRequest>());
+        }
+
+        [Test]
+        public void Update_GivenValidRequest_ShouldCallUpdateFromRepo()
+        {
+            //---------------Set up test pack-------------------
+            Color color = CreateColor();
+            _mapper?.Map<Color>(Arg.Any<ColorRequest>())
+                .Returns(color);            
+            //---------------Assert Precondition----------------
+            //---------------Execute Test ----------------------
+            _service?.Update(_request);
+            //---------------Test Result -----------------------            
+            _colorRepositoryMock?.Received(1).Update(Arg.Any<Color>());
+        }
+
+        [Test]
+        public void Update_GivenValidRequest_ShouldUpdateColor()
+        {
+            //---------------Set up test pack-------------------
+            Color color = CreateColor();
+            _mapper?.Map<Color>(Arg.Any<ColorRequest>())
+                .Returns(color);
+            _colorRepositoryMock?.Update(color).Returns(true);
+            //---------------Assert Precondition----------------
+            //---------------Execute Test ----------------------
+            var results = _service?.Update(_request);
+            //---------------Test Result -----------------------            
+            Assert.IsTrue(results);
+        }
+
+        [Test]
+        public void Update_GivenValidRequestAndColorWasNotUpdated_ShouldNotUpdateColor()
+        {
+            //---------------Set up test pack-------------------
+            Color color = CreateColor();
+            _mapper?.Map<Color>(Arg.Any<ColorRequest>())
+                .Returns(color);            
+            //---------------Assert Precondition----------------
+            //---------------Execute Test ----------------------
+            var results = _service?.Update(_request);
+            //---------------Test Result -----------------------            
+            Assert.IsFalse(results);
+        }
+
+        private static Color CreateColor()
+        {            
+            return new Color
+            {
+                ColorId  = Guid.NewGuid(),
+                Description = "white",
+            };
         }
 
         private void ResolveMapper(List<ColorResponse> list)

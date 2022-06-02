@@ -36,7 +36,12 @@ namespace WashMyCar.Core.Services
 
         public bool Update(ColorRequest colorRequest)
         {
-            throw new NotImplementedException();
+            if (colorRequest is null)
+                throw new ArgumentNullException(nameof(colorRequest));
+
+            var colorObj = _mapper.Map<Color>(colorRequest);
+            var isUpdated = _colorRepository.Update(colorObj);
+            return isUpdated;
         }
 
         public bool Delete(Guid colorId)
