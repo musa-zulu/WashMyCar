@@ -5,9 +5,9 @@ namespace WashMyCar.Core.Services
 {
     public interface IColorService
     {
-        IEnumerable<ColorResponse> GetAllColors();
-        bool Save(ColorRequest colorRequest);
-        bool Update(ColorRequest colorRequest);
-        bool Delete(Guid colorId);
+        Task<IEnumerable<ColorResponse>> GetAllColorsAsync();
+        Task<bool> SaveAsync(ColorRequest colorRequest);
+        Task<bool> UpdateAsync(ColorRequest colorRequest);
+        Task<bool> Delete(Guid colorId);
     }
 }

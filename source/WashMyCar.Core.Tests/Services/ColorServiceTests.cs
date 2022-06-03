@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WashMyCar.Core.DataContracts;
 using WashMyCar.Core.Domain;
 using WashMyCar.Core.Request;
@@ -35,7 +36,7 @@ namespace WashMyCar.Core.Tests.Services
             
             _colorRepositoryMock = Substitute.For<IColorRepository>();
 
-            _colorRepositoryMock.GetAll().Returns(_availableColors);
+            _colorRepositoryMock.GetAllAsync().Returns(_availableColors);
 
             _service = new ColorService(_colorRepositoryMock, _mapper);
         }
@@ -73,18 +74,18 @@ namespace WashMyCar.Core.Tests.Services
         }
 
         [Test]
-        public void GetAllColors_GivenNoColorExist_ShouldReturnEmptyList()
+        public async Task GetAllColorsAsync_GivenNoColorExist_ShouldReturnEmptyList()
         {
             //---------------Set up test pack-------------------            
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            var results = _service?.GetAllColors();
+            var results = await _service?.GetAllColorsAsync();
             //---------------Test Result -----------------------
             Assert.IsEmpty(results);
         }
 
         [Test]
-        public void GetAllColors_GivenAColorsExist_ShouldReturnThatColor()
+        public async Task GetAllColorsAsync_GivenAColorsExist_ShouldReturnThatColor()
         {
             //---------------Set up test pack-------------------
             _availableColors = GetAvailableColors(1);
@@ -92,7 +93,7 @@ namespace WashMyCar.Core.Tests.Services
             ResolveMapper(list);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            var results = _service?.GetAllColors();
+            var results = await _service?.GetAllColorsAsync();
             //---------------Test Result -----------------------
             Assert.NotNull(results);
             Assert.AreEqual(1, results?.Count());
@@ -100,7 +101,7 @@ namespace WashMyCar.Core.Tests.Services
         }
         
         [Test]
-        public void GetAllColors_GivenTwoColorsExist_ShouldReturnThoseColors()
+        public async Task GetAllColorsAsync_GivenTwoColorsExist_ShouldReturnThoseColors()
         {
             //---------------Set up test pack-------------------
             _availableColors = GetAvailableColors(2);
@@ -108,7 +109,7 @@ namespace WashMyCar.Core.Tests.Services
             ResolveMapper(list);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            var results = _service?.GetAllColors();
+            var results = await _service?.GetAllColorsAsync();
             //---------------Test Result -----------------------
             Assert.NotNull(results);
             Assert.AreEqual(2, results?.Count());
@@ -116,7 +117,7 @@ namespace WashMyCar.Core.Tests.Services
         }
         
         [Test]
-        public void GetAllColors_GivenManyColorsExist_ShouldReturnThoseColors()
+        public async Task GetAllColorsAsync_GivenManyColorsExist_ShouldReturnThoseColors()
         {
             //---------------Set up test pack-------------------
             _availableColors = GetAvailableColors(4);
@@ -124,7 +125,7 @@ namespace WashMyCar.Core.Tests.Services
             ResolveMapper(list);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            var results = _service?.GetAllColors();
+            var results = await _service?.GetAllColorsAsync();
             //---------------Test Result -----------------------
             Assert.NotNull(results);
             Assert.AreEqual(4, results?.Count());
@@ -132,18 +133,18 @@ namespace WashMyCar.Core.Tests.Services
         }
 
         [Test]
-        public void GetAllColors_ShouldCallGetAll()
+        public async Task GetAllColorsAsync_ShouldCallGetAll()
         {
             //---------------Set up test pack------------------- 
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            _ = _service?.GetAllColors();
+            _ = await _service?.GetAllColorsAsync();
             //---------------Test Result -----------------------            
-            _colorRepositoryMock?.Received(1).GetAll();
+            _colorRepositoryMock?.Received(1).GetAllAsync();
         }
 
         [Test]
-        public void GetAllColors_ShouldReturnListOfTypeColorResponse()
+        public async Task GetAllColorsAsync_ShouldReturnListOfTypeColorResponse()
         {
             //---------------Set up test pack-------------------
             _availableColors = GetAvailableColors(1);
@@ -151,25 +152,13 @@ namespace WashMyCar.Core.Tests.Services
             ResolveMapper(list);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            _ = _service?.GetAllColors();
+            _ = await _service?.GetAllColorsAsync();
             //---------------Test Result -----------------------
             Assert.IsInstanceOf<List<ColorResponse>>(list);
         }
 
         [Test]
-        public void Save_GivenRequestIsNull_ShouldThrowException()
-        {
-            //---------------Set up test pack-------------------
-            //---------------Assert Precondition----------------
-            //---------------Execute Test ----------------------            
-            var ex = Assert.Throws<ArgumentNullException>(() =>
-            _service?.Save(null));
-            //---------------Test Result -----------------------
-            Assert.AreEqual("colorRequest", ex.ParamName);
-        }
-
-        [Test]
-        public void Save_GivenValidRequest_ShouldCallSaveFromRepo()
+        public async Task SaveAsync_GivenValidRequest_ShouldCallSaveFromRepo()
         {
             //---------------Set up test pack-------------------
             Color color = CreateColor();
@@ -177,13 +166,13 @@ namespace WashMyCar.Core.Tests.Services
                 .Returns(color);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            _service?.Save(_request);
+            await _service?.SaveAsync(_request);
             //---------------Test Result -----------------------            
-            _colorRepositoryMock?.Received(1).Save(Arg.Any<Color>());
+            _colorRepositoryMock?.Received(1).SaveAsync(Arg.Any<Color>());
         }
 
         [Test]
-        public void Save_GivenValidRequest_ShouldCallMappingEngine()
+        public async Task SaveAsync_GivenValidRequest_ShouldCallMappingEngine()
         {
             //---------------Set up test pack-------------------
             Color color = CreateColor();
@@ -191,66 +180,54 @@ namespace WashMyCar.Core.Tests.Services
                 .Returns(color);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            _service?.Save(_request);
+            await _service?.SaveAsync(_request);
             //---------------Test Result -----------------------            
             _mapper?.Received(1).Map<Color>(Arg.Any<ColorRequest>());
         }
 
         [Test]
-        public void Save_GivenValidRequestAndObjectIsSaved_ShouldReturnTrue()
+        public async Task SaveAsync_GivenValidRequestAndObjectIsSaved_ShouldReturnTrue()
         {
             //---------------Set up test pack-------------------
             Color color = CreateColor();
             _mapper?.Map<Color>(Arg.Any<ColorRequest>())
                 .Returns(color);
-            _colorRepositoryMock?.Save(Arg.Any<Color>()).Returns(true);
+            _colorRepositoryMock?.SaveAsync(Arg.Any<Color>()).Returns(true);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            var results = _service?.Save(_request);
+            var results = await _service?.SaveAsync(_request);
             //---------------Test Result -----------------------            
             Assert.IsTrue(results);
         }
 
         [Test]
-        public void Save_GivenValidRequestAndObjectIsNotSaved_ShouldReturnFalse()
+        public async Task SaveAsync_GivenValidRequestAndObjectIsNotSaved_ShouldReturnFalse()
         {
             //---------------Set up test pack-------------------
             Color color = CreateColor();
             _mapper?.Map<Color>(Arg.Any<ColorRequest>())
                 .Returns(color);
-            _colorRepositoryMock?.Save(null).Returns(false);
+            _colorRepositoryMock?.SaveAsync(null).Returns(false);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            var results = _service?.Save(_request);
+            var results = await _service?.SaveAsync(_request);
             //---------------Test Result -----------------------            
             Assert.IsFalse(results);
         }
 
         [Test]
-        public void Update_GivenRequestIsNull_ShouldThrowException()
-        {
-            //---------------Set up test pack-------------------
-            //---------------Assert Precondition----------------
-            //---------------Execute Test ----------------------            
-            var ex = Assert.Throws<ArgumentNullException>(() =>
-            _service?.Update(null));
-            //---------------Test Result -----------------------
-            Assert.AreEqual("colorRequest", ex.ParamName);
-        }
-
-        [Test]
-        public void Update_GivenValidRequest_ShouldCallMappingEngine()
+        public async Task UpdateAsync_GivenValidRequest_ShouldCallMappingEngine()
         {
             //---------------Set up test pack-------------------            
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            _service?.Update(_request);
+            await _service?.UpdateAsync(_request);
             //---------------Test Result -----------------------            
             _mapper?.Received(1).Map<Color>(Arg.Any<ColorRequest>());
         }
 
         [Test]
-        public void Update_GivenValidRequest_ShouldCallUpdateFromRepo()
+        public async Task UpdateAsync_GivenValidRequest_ShouldCallUpdateFromRepo()
         {
             //---------------Set up test pack-------------------
             Color color = CreateColor();
@@ -258,28 +235,28 @@ namespace WashMyCar.Core.Tests.Services
                 .Returns(color);            
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            _service?.Update(_request);
+            await _service?.UpdateAsync(_request);
             //---------------Test Result -----------------------            
-            _colorRepositoryMock?.Received(1).Update(Arg.Any<Color>());
+            _colorRepositoryMock?.Received(1).UpdateAsync(Arg.Any<Color>());
         }
 
         [Test]
-        public void Update_GivenValidRequest_ShouldUpdateColor()
+        public async Task UpdateAsync_GivenValidRequest_ShouldUpdateColor()
         {
             //---------------Set up test pack-------------------
             Color color = CreateColor();
             _mapper?.Map<Color>(Arg.Any<ColorRequest>())
                 .Returns(color);
-            _colorRepositoryMock?.Update(color).Returns(true);
+            _colorRepositoryMock?.UpdateAsync(color).Returns(true);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            var results = _service?.Update(_request);
+            var results = await _service?.UpdateAsync(_request);
             //---------------Test Result -----------------------            
             Assert.IsTrue(results);
         }
 
         [Test]
-        public void Update_GivenValidRequestAndColorWasNotUpdated_ShouldNotUpdateColor()
+        public async Task UpdateAsync_GivenValidRequestAndColorWasNotUpdated_ShouldNotUpdateColor()
         {
             //---------------Set up test pack-------------------
             Color color = CreateColor();
@@ -287,7 +264,7 @@ namespace WashMyCar.Core.Tests.Services
                 .Returns(color);            
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            var results = _service?.Update(_request);
+            var results = await _service?.UpdateAsync(_request);
             //---------------Test Result -----------------------            
             Assert.IsFalse(results);
         }

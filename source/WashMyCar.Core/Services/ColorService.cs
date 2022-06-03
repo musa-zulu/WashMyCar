@@ -17,34 +17,28 @@ namespace WashMyCar.Core.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public IEnumerable<ColorResponse> GetAllColors()
+        public async Task<IEnumerable<ColorResponse>> GetAllColorsAsync()
         {
-            var response = _colorRepository.GetAll();
+            var response = await _colorRepository.GetAllAsync();
             return _mapper.Map<List<ColorResponse>>(response) ?? new List<ColorResponse>();
         }
 
-        public bool Save(ColorRequest colorRequest)
+        public async Task<bool> SaveAsync(ColorRequest colorRequest)
         {
-            if (colorRequest is null)
-                throw new ArgumentNullException(nameof(colorRequest));
-
             var colorObj = _mapper.Map<Color>(colorRequest);
             colorObj.ColorId = Guid.NewGuid();
-            bool isSaved = _colorRepository.Save(colorObj);
+            bool isSaved = await _colorRepository.SaveAsync(colorObj);
             return isSaved;
         }
 
-        public bool Update(ColorRequest colorRequest)
-        {
-            if (colorRequest is null)
-                throw new ArgumentNullException(nameof(colorRequest));
-
+        public async Task<bool> UpdateAsync(ColorRequest colorRequest)
+        {         
             var colorObj = _mapper.Map<Color>(colorRequest);
-            var isUpdated = _colorRepository.Update(colorObj);
+            var isUpdated = await _colorRepository.UpdateAsync(colorObj);
             return isUpdated;
         }
 
-        public bool Delete(Guid colorId)
+        public async Task<bool> Delete(Guid colorId)
         {
             throw new NotImplementedException();
         }

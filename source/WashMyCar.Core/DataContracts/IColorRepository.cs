@@ -4,8 +4,8 @@ namespace WashMyCar.Core.DataContracts
 {
     public interface IColorRepository
     {        
-        List<Color> GetAll();
-        bool Save(Color color);
-        bool Update(Color color);
+        Task<List<Color>> GetAllAsync();
+        Task<bool> SaveAsync(Color color);
+        Task<bool> UpdateAsync(Color color);
     }
 }
