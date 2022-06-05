@@ -38,9 +38,23 @@ namespace WashMyCar.Core.Services
             return isUpdated;
         }
 
-        public async Task<bool> Delete(Guid colorId)
+        public async Task<ColorResponse> GetColorByIdAsync(Guid colorId)
         {
-            throw new NotImplementedException();
+            var color = await _colorRepository.GetColorByIdAsync(colorId);
+            var response = _mapper.Map<ColorResponse>(color);
+            return response;
+        }
+
+        public async Task<bool> DeleteAsync(Guid colorId)
+        {
+            var color = await _colorRepository.GetColorByIdAsync(colorId);
+
+            if (color is null)
+                return false;
+
+            var isDeleted = await _colorRepository.DeleteAsync(color);
+            
+            return isDeleted;
         }
     }
 }
