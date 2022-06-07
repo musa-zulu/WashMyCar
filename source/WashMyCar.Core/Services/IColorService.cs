@@ -8,7 +8,7 @@ namespace WashMyCar.Core.Services
         Task<IEnumerable<ColorResponse>> GetAllColorsAsync();
         Task<bool> SaveAsync(ColorRequest colorRequest);
         Task<bool> UpdateAsync(ColorRequest colorRequest);
-        Task<bool> DeleteAsync(Guid colorId);
-        Task<ColorResponse> GetColorByIdAsync(Guid colorId);
+        Task<bool> DeleteAsync(int colorId);
+        Task<ColorResponse> GetColorByIdAsync(int colorId);
     }
 }

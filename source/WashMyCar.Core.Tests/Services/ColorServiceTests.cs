@@ -36,7 +36,7 @@ namespace WashMyCar.Core.Tests.Services
 
             _colorRepositoryMock = Substitute.For<IColorRepository>();
 
-            _colorRepositoryMock.GetAllAsync().Returns(_availableColors);
+            _colorRepositoryMock.GetAll().Returns(_availableColors);
 
             _service = new ColorService(_colorRepositoryMock, _mapper);
         }
@@ -140,7 +140,7 @@ namespace WashMyCar.Core.Tests.Services
             //---------------Execute Test ----------------------
             _ = await _service?.GetAllColorsAsync();
             //---------------Test Result -----------------------            
-            _colorRepositoryMock?.Received(1).GetAllAsync();
+            _colorRepositoryMock?.Received(1).GetAll();
         }
 
         [Test]
@@ -158,7 +158,7 @@ namespace WashMyCar.Core.Tests.Services
         }
 
         [Test]
-        public async Task SaveAsync_GivenValidRequest_ShouldCallSaveFromRepo()
+        public async Task SaveAsync_GivenValidRequest_ShouldCallAddFromRepo()
         {
             //---------------Set up test pack-------------------
             Color color = CreateColor();
@@ -168,7 +168,7 @@ namespace WashMyCar.Core.Tests.Services
             //---------------Execute Test ----------------------
             await _service?.SaveAsync(_request);
             //---------------Test Result -----------------------            
-            _colorRepositoryMock?.Received(1).SaveAsync(Arg.Any<Color>());
+            _colorRepositoryMock?.Received(1).Add(Arg.Any<Color>());
         }
 
         [Test]
@@ -192,7 +192,7 @@ namespace WashMyCar.Core.Tests.Services
             Color color = CreateColor();
             _mapper?.Map<Color>(Arg.Any<ColorRequest>())
                 .Returns(color);
-            _colorRepositoryMock?.SaveAsync(Arg.Any<Color>()).Returns(true);
+            _colorRepositoryMock?.Add(Arg.Any<Color>()).Returns(true);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
             var results = await _service?.SaveAsync(_request);
@@ -207,7 +207,7 @@ namespace WashMyCar.Core.Tests.Services
             Color color = CreateColor();
             _mapper?.Map<Color>(Arg.Any<ColorRequest>())
                 .Returns(color);
-            _colorRepositoryMock?.SaveAsync(null).Returns(false);
+            _colorRepositoryMock?.Add(null).Returns(false);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
             var results = await _service?.SaveAsync(_request);
@@ -227,7 +227,7 @@ namespace WashMyCar.Core.Tests.Services
         }
 
         [Test]
-        public async Task UpdateAsync_GivenValidRequest_ShouldCallUpdateFromRepo()
+        public async Task Update_GivenValidRequest_ShouldCallUpdateFromRepo()
         {
             //---------------Set up test pack-------------------
             Color color = CreateColor();
@@ -237,7 +237,7 @@ namespace WashMyCar.Core.Tests.Services
             //---------------Execute Test ----------------------
             await _service?.UpdateAsync(_request);
             //---------------Test Result -----------------------            
-            _colorRepositoryMock?.Received(1).UpdateAsync(Arg.Any<Color>());
+            _colorRepositoryMock?.Received(1).Update(Arg.Any<Color>());
         }
 
         [Test]
@@ -247,7 +247,7 @@ namespace WashMyCar.Core.Tests.Services
             Color color = CreateColor();
             _mapper?.Map<Color>(Arg.Any<ColorRequest>())
                 .Returns(color);
-            _colorRepositoryMock?.UpdateAsync(color).Returns(true);
+            _colorRepositoryMock?.Update(color).Returns(true);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
             var results = await _service?.UpdateAsync(_request);
@@ -270,15 +270,15 @@ namespace WashMyCar.Core.Tests.Services
         }
 
         [Test]
-        public async Task GetColorByIdAsync_GivenValidColorId_ShouldCallGetByIdAsyncFromRepo()
+        public async Task GetColorByIdAsync_GivenValidColorId_ShouldCallGetByIdFromRepo()
         {
             //---------------Set up test pack-------------------
-            var colorId = Guid.NewGuid();
+            var colorId = 1;
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
             _ = await _service?.GetColorByIdAsync(colorId);
             //---------------Test Result -----------------------            
-            _colorRepositoryMock?.Received(1).GetColorByIdAsync(colorId);
+            _colorRepositoryMock?.Received(1).GetById(colorId);
         }
 
         [Test]
@@ -302,16 +302,16 @@ namespace WashMyCar.Core.Tests.Services
             var color = CreateColor();
             var response = new ColorResponse
             {
-                ColorId = color.ColorId,
+                ColorId = color.Id,
                 Description = color.Description
             };
             _mapper?.Map<ColorResponse>(color)
                 .Returns(response);
 
-            _colorRepositoryMock.GetColorByIdAsync(color.ColorId).Returns(color);
+            _colorRepositoryMock?.GetById(color.Id).Returns(color);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            var result = await _service?.GetColorByIdAsync(color.ColorId);
+            var result = await _service?.GetColorByIdAsync(color.Id);
             //---------------Test Result -----------------------            
             Assert.IsNotNull(result);
             Assert.AreEqual(response, result);
@@ -324,16 +324,16 @@ namespace WashMyCar.Core.Tests.Services
             var color = CreateColor();
             var response = new ColorResponse
             {
-                ColorId = color.ColorId,
+                ColorId = color.Id,
                 Description = color.Description
             };
             _mapper?.Map<ColorResponse>(color)
                 .Returns(response);
 
-            _colorRepositoryMock.GetColorByIdAsync(color.ColorId).Returns(color);
+            _colorRepositoryMock?.GetById(color.Id).Returns(color);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            var result = await _service?.GetColorByIdAsync(color.ColorId);
+            var result = await _service?.GetColorByIdAsync(color.Id);
             //---------------Test Result -----------------------
             Assert.IsInstanceOf<ColorResponse>(result);
         }
@@ -342,12 +342,12 @@ namespace WashMyCar.Core.Tests.Services
         public async Task DeleteAsync_GivenValidColorId_ShouldCallGetById()
         {
             //---------------Set up test pack-------------------
-            var colorId = Guid.NewGuid();
+            var colorId = 1;
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
             _ = await _service?.DeleteAsync(colorId);
             //---------------Test Result -----------------------            
-            _colorRepositoryMock?.Received(1).GetColorByIdAsync(colorId);
+            _colorRepositoryMock?.Received(1).GetById(colorId);
         }
 
         [Test]
@@ -356,30 +356,30 @@ namespace WashMyCar.Core.Tests.Services
             //---------------Set up test pack-------------------            
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            var result = await _service?.DeleteAsync(Guid.Empty);
+            var result = await _service?.DeleteAsync(0);
             //---------------Test Result -----------------------            
             Assert.IsFalse(result);
         }
 
         [Test]
-        public async Task DeleteAsync_GivenColorIsNotNull_ShouldCallDeleteAsync()
+        public async Task DeleteAsync_GivenColorIsNotNull_ShouldCallRemoveFromRepo()
         {
             //---------------Set up test pack-------------------
             var color = CreateColor();
-            _colorRepositoryMock?.GetColorByIdAsync(color.ColorId).
+            _colorRepositoryMock?.GetById(color.Id).
                 Returns(color);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            _ = await _service?.DeleteAsync(color.ColorId);
+            _ = await _service?.DeleteAsync(color.Id);
             //---------------Test Result -----------------------            
-            _colorRepositoryMock?.Received(1).DeleteAsync(color);
+            _colorRepositoryMock?.Received(1).Remove(color);
         }
 
         private static Color CreateColor()
         {
             return new Color
             {
-                ColorId = Guid.NewGuid(),
+                Id = 1,
                 Description = "white",
             };
         }
